@@ -2,6 +2,7 @@ package br.com.bruno.parking.controller.mapper;
 
 import br.com.bruno.parking.controller.dto.ParkingCreateDTO;
 import br.com.bruno.parking.controller.dto.ParkingDTO;
+import br.com.bruno.parking.controller.dto.ParkingUpdateDTO;
 import br.com.bruno.parking.model.Parking;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,10 @@ public class ParkingMapper {
     }
 
     public Parking toParkingCreate(ParkingCreateDTO dto) {
+        return MODEL_MAPPER.map(dto, Parking.class);
+    }
+    
+    public Parking toParkingUpdate(ParkingUpdateDTO dto) {
         return MODEL_MAPPER.map(dto, Parking.class);
     }
 }

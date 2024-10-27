@@ -2,6 +2,7 @@ package br.com.bruno.parking.controller;
 
 import br.com.bruno.parking.controller.dto.ParkingCreateDTO;
 import br.com.bruno.parking.controller.dto.ParkingDTO;
+import br.com.bruno.parking.controller.dto.ParkingUpdateDTO;
 import br.com.bruno.parking.controller.mapper.ParkingMapper;
 import br.com.bruno.parking.model.Parking;
 import br.com.bruno.parking.service.ParkingService;
@@ -43,5 +44,25 @@ public class ParkingController {
         Parking parking = parkingService.create(parkingCreate);
         ParkingDTO result = parkingMapper.toParkingDTO(parking);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<ParkingDTO> exit(@PathVariable String id) {
+        Parking parking = parkingService.exit(id);
+        return ResponseEntity.ok(parkingMapper.toParkingDTO(parking));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ParkingDTO> update(@PathVariable String id, @RequestBody ParkingUpdateDTO dto) {
+        var parkingUpdate = parkingMapper.toParkingUpdate(dto);
+        Parking parking = parkingService.update(id, parkingUpdate);
+        ParkingDTO result = parkingMapper.toParkingDTO(parking);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ParkingDTO> delete(@PathVariable String id) {
+        parkingService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

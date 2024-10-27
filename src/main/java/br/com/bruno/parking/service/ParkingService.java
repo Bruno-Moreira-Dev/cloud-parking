@@ -1,7 +1,9 @@
 package br.com.bruno.parking.service;
 
 import br.com.bruno.parking.controller.dto.ParkingDTO;
+import br.com.bruno.parking.exception.ParkingNotFoundException;
 import br.com.bruno.parking.model.Parking;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,15 +19,6 @@ public class ParkingService {
 
     private static final Map<String, Parking> parkingMap = new HashMap<>();
 
-    static {
-        var id1 = getUUID();
-        var id2 = getUUID();
-        Parking parking1 = new Parking(id1, "DMS-1111", "SP", "BMW", "BLACK");
-        Parking parking2 = new Parking(id2, "WAS-1234", "RS", "VW", "RED");
-        parkingMap.put(id1, parking1);
-        parkingMap.put(id2, parking2);
-    }
-
     private static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");
     }
@@ -35,6 +28,10 @@ public class ParkingService {
     }
 
     public Parking findById(String id) {
+        Parking parking = parkingMap.get(id);
+        if (parking == null) {
+            throw new ParkingNotFoundException(id);
+        }
         return parkingMap.get(id);
     }
 
@@ -44,5 +41,27 @@ public class ParkingService {
         parkingCreate.setEntryDate(LocalDateTime.now());
         parkingMap.put(uuid, parkingCreate);
         return parkingCreate;
+    }
+
+    public void delete(String id) {
+        Parking parking = findById(id);
+        if (parking == null) {
+            throw new ParkingNotFoundException(id);
+        }
+        parkingMap.remove(id);
+    }
+
+    public Parking update(String id, Parking parkingUpdate) {
+        Parking parking = findById(id);
+        parking.setColor(parkingUpdate.getColor());
+        parkingMap.replace(id, parking);
+        return parking;
+    }
+
+    public Parking exit(String id) {
+        Parking parking = findById(id);
+        parking.setExitDate(parking.getExitDate());
+        parkingMap.replace(id, parking);
+        return parking;
     }
 }
