@@ -10,8 +10,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ParkingControllerIT extends AbstractContainerBase {
 
@@ -23,11 +21,12 @@ class ParkingControllerIT extends AbstractContainerBase {
         System.out.println(randomPort);
         RestAssured.port = randomPort;
     }
-
-
+    
     @Test
     void whenFindAllThenCheckResult() {
         RestAssured.given()
+                .auth()
+                .basic("user", "postgres@123456")
                 .when()
                 .get("/parking")
                 .then()

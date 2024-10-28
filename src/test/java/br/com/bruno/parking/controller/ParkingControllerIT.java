@@ -22,10 +22,11 @@ class ParkingControllerIT extends AbstractContainerBase {
         RestAssured.port = randomPort;
     }
 
-
     @Test
     void whenFindAllThenCheckResult() {
         RestAssured.given()
+                .auth()
+                .basic("user", "postgres@123456")
                 .when()
                 .get("/parking")
                 .then()
